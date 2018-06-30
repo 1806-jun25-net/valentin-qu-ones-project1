@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Main", "Main\Main.csproj", "{193943A2-EF4D-4B8D-BFC0-A5E09F95A05B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Main", "Main\Main.csproj", "{193943A2-EF4D-4B8D-BFC0-A5E09F95A05B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizza.Library", "Pizza.Library\Pizza.Library.csproj", "{C30AAAAF-A4D5-446E-877F-9EBBBE1DB9E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pizza.Library", "Pizza.Library\Pizza.Library.csproj", "{C30AAAAF-A4D5-446E-877F-9EBBBE1DB9E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestMethods", "XUnitTestMethods\XUnitTestMethods.csproj", "{B73C7F11-1765-4221-B703-B0C53688BB3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C30AAAAF-A4D5-446E-877F-9EBBBE1DB9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C30AAAAF-A4D5-446E-877F-9EBBBE1DB9E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C30AAAAF-A4D5-446E-877F-9EBBBE1DB9E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B73C7F11-1765-4221-B703-B0C53688BB3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B73C7F11-1765-4221-B703-B0C53688BB3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B73C7F11-1765-4221-B703-B0C53688BB3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B73C7F11-1765-4221-B703-B0C53688BB3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

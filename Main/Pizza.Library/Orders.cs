@@ -8,6 +8,7 @@ namespace Pizza.Library
 {
     public class Orders
     {
+        [XmlAttribute]
         public User User { get; set; }
         public Pizza.Pizza Pizza { get; set; }
         public int amountOfPizza { get; set; }

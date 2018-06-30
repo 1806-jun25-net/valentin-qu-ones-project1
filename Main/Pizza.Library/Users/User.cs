@@ -11,7 +11,7 @@ namespace Pizza.Library
         public int Id { get; set; }
         public Name Name { get; set; }
         public Address Address { get; set; }
-        public int Age { get; set; }
+        
 
 
     }
