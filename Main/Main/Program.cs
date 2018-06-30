@@ -79,7 +79,8 @@ namespace Main
                                             string adCity = Console.ReadLine();
                                             Console.WriteLine("Enter your State: ");
                                             string adState = Console.ReadLine();
-                                            Console.WriteLine();
+                                            Console.WriteLine("Enter date: ");
+                                            string date = Console.ReadLine();
                                             #endregion
 
                                             Console.WriteLine("How many " + m.ingredients[pizzaOption].topping.ToString() + " Pizza do you want? ");
@@ -89,7 +90,7 @@ namespace Main
                                             {
                                                 if (pizzaQty <= m.ingredients[pizzaOption].qty)
                                                 {
-                                                    m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty);
+                                                    m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty, DateTime.Parse(date));
 
                                                 }
                                                 else
@@ -167,7 +168,18 @@ namespace Main
                         Console.WriteLine("What is the location of the store you are looking for? ");
                         m.DisplayOrderByLocation(Console.ReadLine());
                     }
-                    
+
+                    if (option == 7)
+                    {
+                        Console.WriteLine("Enter a UserID you want to view the order history from: ");
+                        m.DisplayOrdersByUser(int.Parse(Console.ReadLine()));
+
+                    }
+                    if (option == 8)
+                    {
+                        m.SortByAll();
+                    }
+
 
 
                 }

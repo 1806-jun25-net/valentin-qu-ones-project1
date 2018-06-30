@@ -6,7 +6,7 @@ using Pizza.Library.Pizza;
 
 namespace Pizza.Library
 {
-    public class Orders
+    public class Orders: IComparable<Orders>
     {
         [XmlAttribute]
         public int Id { get; set; }
@@ -14,6 +14,21 @@ namespace Pizza.Library
         public User User { get; set; }
         public Pizza.Pizza Pizza { get; set; }
         public int amountOfPizza { get; set; }
+        public DateTime date { get; set; }
+
+        public int CompareTo(Orders obj)
+        {
+            int compare;
+            compare = DateTime.Compare(this.date, obj.date);
+
+            //  
+            compare = -compare;
+            return compare;
+
+        }
+
+
+
 
         
     }

@@ -84,65 +84,74 @@ namespace Main
 
 
 
-        public void OrderPizza(int idOrder, string location,int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1)
+        public void OrderPizza(int idOrder, string location,int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1, DateTime date)
         {
             try
             {
-                int range = 25;
-                Random r = new Random();
-                double rDouble = r.NextDouble() * range; //for the cost of the pizza in total.
-
-                order.Add(new Orders
+                if (qty1 <= 12)
                 {
-                    Id = idOrder,
-                    location = location,
-                    User = new User
+                    int range = 25;
+                    Random r = new Random();
+                    double rDouble = r.NextDouble() * range; //for the cost of the pizza in total.
+
+                    order.Add(new Orders
                     {
-
-                        Id = idUser,
-                        Name = new Name
+                        Id = idOrder,
+                        location = location,
+                        User = new User
                         {
-                            First = fName,
-                            Last = lName
-                        },
-                        Address = new Address
-                        {
-                            Line1 = adLine,
-                            City = adCity,
-                            State = state
-                        }
 
-                    },
-
-
-                    Pizza = new Pizza.Library.Pizza.Pizza
-                    {
-                        toppings = new Ingredients
-                        {
-                            topping = ingredients[topp].topping.ToString(),
-
-
+                            Id = idUser,
+                            Name = new Name
+                            {
+                                First = fName,
+                                Last = lName
+                            },
+                            Address = new Address
+                            {
+                                Line1 = adLine,
+                                City = adCity,
+                                State = state
+                            }
 
                         },
-                        cost = rDouble
 
 
-                    },
-                    amountOfPizza = qty1
+                        Pizza = new Pizza.Library.Pizza.Pizza
+                        {
+                            toppings = new Ingredients
+                            {
+                                topping = ingredients[topp].topping.ToString(),
 
 
 
+                            },
+                            cost = rDouble
 
-                });
 
-                ingredients[topp].qty -= qty1;
-                Console.WriteLine(ingredients[topp].qty.ToString() + " Amount of " + ingredients[topp].topping.ToString() + " left.");
+                        },
+                        amountOfPizza = qty1,
+                        date = date
+                        
+
+
+
+                    });
+
+                    ingredients[topp].qty -= qty1;
+                    Console.WriteLine(ingredients[topp].qty.ToString() + " Amount of " + ingredients[topp].topping.ToString() + " left.");
+                }
+                else {
+                    Console.WriteLine("You have ordered " + qty1 + " and that surpasses the amount we allow to order.");
+
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex.Message}");
 
             }
+
         }
 
 
@@ -197,7 +206,7 @@ namespace Main
                 if (int.Parse(order[i].Id.ToString()) == id)
                 {
 
-                    Console.WriteLine("Order details: \n " + "Order ID: " + id + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].date.ToShortDateString() + "\n Order ID: " + id + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
                 }
             }
@@ -213,7 +222,7 @@ namespace Main
                 if (order[i].location.ToString() == location)
                 {
 
-                    Console.WriteLine("Order details: \n " + "Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].date.ToShortDateString()+ "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
                 }
             }
@@ -221,6 +230,79 @@ namespace Main
 
         }
 
+        public void DisplayOrdersByUser(int id)
+        {
+            for (int i = 0; i < order.Count; i++)
+            {
+                if (int.Parse(order[i].User.Id.ToString()) == id)
+                {
+                    Console.WriteLine($"UserID: {id}");
+                    Console.WriteLine("User: " + order[i].User.Name.First.ToString() + " " + order[i].User.Name.Last.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].date.ToShortDateString()+ "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+
+                }
+            }
+        }
+
+        public void SortByAll()
+        {
+            //order.OrderByDescending(e => e.date);
+
+
+            // order.ForEach(Console.WriteLine);
+            Console.WriteLine("\n Sorted by Acending: \n");
+            List<Orders> SortedList = order.OrderBy(o => o.date).ToList();
+
+            foreach (var o in SortedList)
+            {
+                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2") );
+                
+            }
+            Console.WriteLine();
+
+
+            Console.WriteLine("\n Sorted by Decending: \n");
+            List<Orders> SortedListDescending  = order.OrderByDescending(o => o.date).ToList();
+
+            foreach (var o in SortedListDescending)
+            {
+                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
+
+
+            }
+            Console.WriteLine();
+
+
+
+
+
+            Console.WriteLine("\n Sorted by Acending Cost: \n");
+            List<Orders> SortedListCost = order.OrderBy(o => o.Pizza.cost.ToString()).ToList();
+
+            foreach (var o in SortedList)
+            {
+                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
+
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("\n Sorted by Decending: \n");
+            List<Orders> SortedListDescendingCost = order.OrderByDescending(o => o.Pizza.cost.ToString()).ToList();
+
+            foreach (var o in SortedListDescending)
+            {
+                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
+
+
+            }
+            Console.WriteLine();
+
+
+
+
+
+
+        }
 
     }
 }
