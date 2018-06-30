@@ -19,12 +19,15 @@ namespace Main
 
                 m.PrintAll();
                 option = int.Parse(Console.ReadLine());
-
+               
+                //This if will call a method an populate the inventory.
                 if (option == 1)
                 {
                     m.PopulateInventory();
 
                 }
+
+                //This if will contain the order info to pass it to parameters to another class so it can be processed.
                 if (option == 2)
                 {
 
@@ -132,6 +135,21 @@ namespace Main
 
                 }
 
+                if (option == 3)
+                {
+                    Console.WriteLine("Enter a user ID to search the suggested pizza: ");
+                    m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
+
+
+                }
+
+
+                if (option == 4)
+                {
+                    Console.WriteLine("Enter a Name to display its data: ");
+                    m.SearchUser(Console.ReadLine());
+
+                }
 
             }
 

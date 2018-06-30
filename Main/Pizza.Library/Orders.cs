@@ -12,9 +12,10 @@ namespace Pizza.Library
         public User User { get; set; }
         public Pizza.Pizza Pizza { get; set; }
         public int amountOfPizza { get; set; }
-        
 
-
-
+        public static implicit operator Orders(int v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

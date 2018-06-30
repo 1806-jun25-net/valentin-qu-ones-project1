@@ -2,6 +2,7 @@
 using Pizza.Library.Pizza;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Main
@@ -141,6 +142,54 @@ namespace Main
 
             }
         }
+
+
+        public void PrintSuggestedOrder(int suggestion)
+        {
+            int countTop1 = 0;
+            int countTop2 = 0;
+
+
+
+            for (int i = 0; i < order.Count; i++)
+            {
+                if (order[i].User.Id == suggestion)
+                {
+
+                    //order.Where(s => s != null && s.Pizza.toppings.ToString().StartsWith(order[i].Pizza.toppings.ToString())).Count();
+
+                    // order.Average(s => s.Pizza.toppings.ToString().Length);
+
+
+
+                    Console.WriteLine();
+
+                }
+            }
+
+
+
+
+        }
+
+        public void SearchUser(string Name)
+        {
+
+            for (int i = 0; i < order.Count; i++)
+            {
+                if (order[i].User.Name.First.ToString() == Name)
+                {
+                    Console.WriteLine("Information that was found: " + order[i].User.Name.First.ToString() + " " + order[i].User.Name.Last.ToString() + " Adress: " + order[i].User.Address.Line1.ToString() + " " + order[i].User.Address.State.ToString());
+
+                }
+            }
+
+
+        }
+
+
+
+
 
 
     }
