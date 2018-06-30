@@ -279,7 +279,7 @@ namespace Main
             Console.WriteLine("\n Sorted by Acending Cost: \n");
             List<Orders> SortedListCost = order.OrderBy(o => o.Pizza.cost.ToString()).ToList();
 
-            foreach (var o in SortedList)
+            foreach (var o in SortedListCost)
             {
                 Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
 
@@ -289,7 +289,7 @@ namespace Main
             Console.WriteLine("\n Sorted by Decending: \n");
             List<Orders> SortedListDescendingCost = order.OrderByDescending(o => o.Pizza.cost.ToString()).ToList();
 
-            foreach (var o in SortedListDescending)
+            foreach (var o in SortedListDescendingCost)
             {
                 Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
 
