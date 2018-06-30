@@ -84,20 +84,21 @@ namespace Main
 
 
 
-        public void OrderPizza(int id, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1)
+        public void OrderPizza(int idOrder,int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1)
         {
             try
             {
-                int range = 100;
+                int range = 25;
                 Random r = new Random();
                 double rDouble = r.NextDouble() * range; //for the cost of the pizza in total.
 
                 order.Add(new Orders
                 {
+                    Id = idOrder,
                     User = new User
                     {
 
-                        Id = id,
+                        Id = idUser,
                         Name = new Name
                         {
                             First = fName,
@@ -117,7 +118,7 @@ namespace Main
                     {
                         toppings = new Ingredients
                         {
-                            topping = ingredients[topp].ToString(),
+                            topping = ingredients[topp].topping.ToString(),
 
 
 
@@ -187,7 +188,21 @@ namespace Main
 
         }
 
+        public void DisplayOrderByID(int id)
+        {
 
+            for (int i = 0; i < order.Count; i++)
+            {
+                if (order[i].Id == id)
+                {
+
+                    Console.WriteLine("Order details: \n " + "Order ID: " + id + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+
+                }
+            }
+
+
+        }
 
 
 

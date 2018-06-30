@@ -16,144 +16,161 @@ namespace Main
 
             while (option != 0)
             {
-
-                m.PrintAll();
-                option = int.Parse(Console.ReadLine());
-               
-                //This if will call a method an populate the inventory.
-                if (option == 1)
+                try
                 {
-                    m.PopulateInventory();
+                    m.PrintAll();
+                    option = int.Parse(Console.ReadLine());
 
-                }
-
-                //This if will contain the order info to pass it to parameters to another class so it can be processed.
-                if (option == 2)
-                {
-
-
-
-                    Console.WriteLine("These are the options for your pizza. Choose one: ");
-                    m.PrintIngredients();
-                    Console.WriteLine();
-
-                    try
+                    //This if will call a method an populate the inventory.
+                    if (option == 1)
                     {
-                        int pizzaOption = int.Parse(Console.ReadLine());
-                        int pizzaQty = 0;
-                        int i;
-                        int count = 0;
+                        m.PopulateInventory();
 
-                        Random r = new Random();//For random integers that would be use to create random ID's.
-                        int rInt = r.Next(1, 100);//With a range of 1 to 100.
+                    }
 
-
+                    //This if will contain the order info to pass it to parameters to another class so it can be processed.
+                    if (option == 2)
+                    {
 
 
-                        if (int.TryParse(pizzaOption.ToString(), out i))
+
+                        Console.WriteLine("These are the options for your pizza. Choose one: ");
+                        m.PrintIngredients();
+                        Console.WriteLine();
+
+                        try
                         {
-                            count++;
-                            if (count == 1)
+                            int pizzaOption = int.Parse(Console.ReadLine());
+                            int pizzaQty = 0;
+                            int i;
+                            int count = 0;
+
+                            Random r = new Random();//For random integers that would be use to create random ID's.
+                            int rInt = r.Next(1, 100);//With a range of 1 to 100.
+
+
+
+
+                            if (int.TryParse(pizzaOption.ToString(), out i))
                             {
-                                if (pizzaOption >= 0 && pizzaOption <= 2)
+                                count++;
+                                if (count == 1)
                                 {
-                                    try
+                                    if (pizzaOption >= 0 && pizzaOption <= 2)
                                     {
-
-                                        #region UserInfo
-                                        Console.WriteLine("Lets place a order but first. Fill the require  information about you. ");
-
-                                        Console.WriteLine("Enter your ID: ");
-                                        string ID = Console.ReadLine();
-
-                                        Console.WriteLine("Enter your First Name: ");
-                                        string fName = Console.ReadLine();
-                                        Console.WriteLine("Enter your Last Name");
-                                        string lName = Console.ReadLine();
-                                        Console.WriteLine("Enter your Address: ");
-                                        string adLine = Console.ReadLine();
-                                        Console.WriteLine("Enter your City: ");
-                                        string adCity = Console.ReadLine();
-                                        Console.WriteLine("Enter your State: ");
-                                        string adState = Console.ReadLine();
-                                        Console.WriteLine();
-                                        #endregion
-
-                                        Console.WriteLine("How many " + m.ingredients[pizzaOption].topping.ToString() + " Pizza do you want? ");
-                                        pizzaQty = int.Parse(Console.ReadLine());
-
-                                        if (int.TryParse(pizzaQty.ToString(), out i))
+                                        try
                                         {
-                                            if (pizzaQty <= m.ingredients[pizzaOption].qty)
+
+                                            #region UserInfo
+                                            Console.WriteLine("Lets place a order but first. Fill the require  information about you. ");
+                                            Console.WriteLine("Order ID: " + rInt);
+                                            Console.WriteLine("Enter your ID: ");
+                                            string ID = Console.ReadLine();
+
+                                            Console.WriteLine("Enter your First Name: ");
+                                            string fName = Console.ReadLine();
+                                            Console.WriteLine("Enter your Last Name");
+                                            string lName = Console.ReadLine();
+                                            Console.WriteLine("Enter your Address: ");
+                                            string adLine = Console.ReadLine();
+                                            Console.WriteLine("Enter your City: ");
+                                            string adCity = Console.ReadLine();
+                                            Console.WriteLine("Enter your State: ");
+                                            string adState = Console.ReadLine();
+                                            Console.WriteLine();
+                                            #endregion
+
+                                            Console.WriteLine("How many " + m.ingredients[pizzaOption].topping.ToString() + " Pizza do you want? ");
+                                            pizzaQty = int.Parse(Console.ReadLine());
+
+                                            if (int.TryParse(pizzaQty.ToString(), out i))
                                             {
-                                                m.OrderPizza(int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty);
+                                                if (pizzaQty <= m.ingredients[pizzaOption].qty)
+                                                {
+                                                    m.OrderPizza(rInt, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty);
+
+                                                }
+                                                else
+                                                {
+                                                    Console.WriteLine("We are low on stock at the moment. Please try again later. Thanks.");
+                                                }
+
 
                                             }
-                                            else
-                                            {
-                                                Console.WriteLine("We are low on stock at the moment. Please try again later. Thanks.");
-                                            }
-
+                                        }
+                                        catch (FormatException ex)
+                                        {
+                                            Console.WriteLine($"Unexpected error: {ex.Message}");
 
                                         }
-                                    }
-                                    catch (FormatException ex)
-                                    {
-                                        Console.WriteLine($"Unexpected error: {ex.Message}");
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine($"Unexpected error: {ex.Message}");
 
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine($"Unexpected error: {ex.Message}");
+                                        }
 
                                     }
 
                                 }
 
+
+
                             }
-
-
+                        }
+                        catch (FormatException ex)
+                        {
+                            Console.WriteLine($"Unexpected error: {ex.Message}");
 
                         }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Unexpected error: {ex.Message}");
+
+                        }
+
+
+
+
+
+
+
                     }
-                    catch (FormatException ex)
+
+                    if (option == 3)
                     {
-                        Console.WriteLine($"Unexpected error: {ex.Message}");
+                        Console.WriteLine("Enter a user ID to search the suggested pizza: ");
+                        m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
+
 
                     }
-                    catch (Exception ex)
+
+
+                    if (option == 4)
                     {
-                        Console.WriteLine($"Unexpected error: {ex.Message}");
+                        Console.WriteLine("Enter a Name to display its data: ");
+                        m.SearchUser(Console.ReadLine());
 
                     }
 
 
+                    if (option == 5)
+                    {
+                        Console.WriteLine("Enter the order ID you want to display: ");
+                        m.DisplayOrderByID(int.Parse(Console.ReadLine()));
 
-
-
-
+                    }
 
                 }
-
-                if (option == 3)
+                catch (FormatException ex)
                 {
-                    Console.WriteLine("Enter a user ID to search the suggested pizza: ");
-                    m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
-
+                    Console.WriteLine(ex);
 
                 }
-
-
-                if (option == 4)
-                {
-                    Console.WriteLine("Enter a Name to display its data: ");
-                    m.SearchUser(Console.ReadLine());
-
-                }
-
             }
-
-
         }
+
     }
+
+
 }
+

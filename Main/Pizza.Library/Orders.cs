@@ -9,13 +9,11 @@ namespace Pizza.Library
     public class Orders
     {
         [XmlAttribute]
+        public int Id { get; set; }
         public User User { get; set; }
         public Pizza.Pizza Pizza { get; set; }
         public int amountOfPizza { get; set; }
 
-        public static implicit operator Orders(int v)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
