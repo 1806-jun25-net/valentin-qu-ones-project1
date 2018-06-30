@@ -10,6 +10,7 @@ namespace Pizza.Library
     {
         [XmlAttribute]
         public int Id { get; set; }
+        public string location { get; set; }
         public User User { get; set; }
         public Pizza.Pizza Pizza { get; set; }
         public int amountOfPizza { get; set; }

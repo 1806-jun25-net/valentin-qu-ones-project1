@@ -64,6 +64,8 @@ namespace Main
                                             #region UserInfo
                                             Console.WriteLine("Lets place a order but first. Fill the require  information about you. ");
                                             Console.WriteLine("Order ID: " + rInt);
+                                            Console.WriteLine("What is the location of the store: ");
+                                            string location = Console.ReadLine();
                                             Console.WriteLine("Enter your ID: ");
                                             string ID = Console.ReadLine();
 
@@ -87,7 +89,7 @@ namespace Main
                                             {
                                                 if (pizzaQty <= m.ingredients[pizzaOption].qty)
                                                 {
-                                                    m.OrderPizza(rInt, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty);
+                                                    m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty);
 
                                                 }
                                                 else
@@ -159,6 +161,14 @@ namespace Main
                         m.DisplayOrderByID(int.Parse(Console.ReadLine()));
 
                     }
+
+                    if (option == 6)
+                    {
+                        Console.WriteLine("What is the location of the store you are looking for? ");
+                        m.DisplayOrderByLocation(Console.ReadLine());
+                    }
+                    
+
 
                 }
                 catch (FormatException ex)

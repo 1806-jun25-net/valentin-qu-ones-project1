@@ -84,7 +84,7 @@ namespace Main
 
 
 
-        public void OrderPizza(int idOrder,int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1)
+        public void OrderPizza(int idOrder, string location,int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1)
         {
             try
             {
@@ -95,6 +95,7 @@ namespace Main
                 order.Add(new Orders
                 {
                     Id = idOrder,
+                    location = location,
                     User = new User
                     {
 
@@ -135,7 +136,7 @@ namespace Main
                 });
 
                 ingredients[topp].qty -= qty1;
-                Console.WriteLine(ingredients[topp].qty.ToString() + " Amount of " + ingredients[topp].ToString() + " left.");
+                Console.WriteLine(ingredients[topp].qty.ToString() + " Amount of " + ingredients[topp].topping.ToString() + " left.");
             }
             catch (Exception ex)
             {
@@ -193,10 +194,10 @@ namespace Main
 
             for (int i = 0; i < order.Count; i++)
             {
-                if (order[i].Id == id)
+                if (int.Parse(order[i].Id.ToString()) == id)
                 {
 
-                    Console.WriteLine("Order details: \n " + "Order ID: " + id + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+                    Console.WriteLine("Order details: \n " + "Order ID: " + id + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
                 }
             }
@@ -204,7 +205,21 @@ namespace Main
 
         }
 
+        public void DisplayOrderByLocation(string location)
+        {
 
+            for (int i = 0; i < order.Count; i++)
+            {
+                if (order[i].location.ToString() == location)
+                {
+
+                    Console.WriteLine("Order details: \n " + "Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+
+                }
+            }
+
+
+        }
 
 
     }
