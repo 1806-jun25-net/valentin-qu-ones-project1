@@ -108,7 +108,7 @@ namespace XUnitTestMethods
 
 
                     },
-                    amountOfPizza = qty1
+                    AmountOfPizza = qty1
 
 
 

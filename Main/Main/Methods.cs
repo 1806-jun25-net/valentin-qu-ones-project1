@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Main
@@ -31,12 +33,13 @@ namespace Main
             Console.WriteLine("");
 
         }
-
+        
         public List<Ingredients> ingredients = new List<Ingredients>();
        // private XMLMethods xml = new XMLMethods();
         public List<Orders> order = new List<Orders>();
         IEnumerable<Orders> result = new List<Orders>();
-        
+
+        Task<IEnumerable<Orders>> desListTask = DeserializeFromFileAsync(@"C:\Users\Revature\Desktop\data.xml");
 
 
 
@@ -103,7 +106,7 @@ namespace Main
                     order.Add(new Orders
                     {
                         Id = idOrder,
-                        location = location,
+                        Location = location,
                         User = new User
                         {
 
@@ -136,8 +139,8 @@ namespace Main
 
 
                         },
-                        amountOfPizza = qty1,
-                        date = date
+                        AmountOfPizza = qty1,
+                        Date = date
                         
 
 
@@ -212,7 +215,7 @@ namespace Main
                 if (int.Parse(order[i].Id.ToString()) == id)
                 {
 
-                    Console.WriteLine("Order details: \n " + order[i].date.ToShortDateString() + "\n Order ID: " + id + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + id + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() +"\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
                 }
             }
@@ -225,10 +228,10 @@ namespace Main
 
             for (int i = 0; i < order.Count; i++)
             {
-                if (order[i].location.ToString() == location)
+                if (order[i].Location.ToString() == location)
                 {
 
-                    Console.WriteLine("Order details: \n " + order[i].date.ToShortDateString()+ "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString()+ "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
                 }
             }
@@ -244,7 +247,7 @@ namespace Main
                 {
                     Console.WriteLine($"UserID: {id}");
                     Console.WriteLine("User: " + order[i].User.Name.First.ToString() + " " + order[i].User.Name.Last.ToString());
-                    Console.WriteLine("Order details: \n " + order[i].date.ToShortDateString()+ "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].amountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString()+ "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
                 }
             }
@@ -257,22 +260,22 @@ namespace Main
 
             // order.ForEach(Console.WriteLine);
             Console.WriteLine("\n Sorted by Acending: \n");
-            List<Orders> SortedList = order.OrderBy(o => o.date).ToList();
+            List<Orders> SortedList = order.OrderBy(o => o.Date).ToList();
 
             foreach (var o in SortedList)
             {
-                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2") );
+                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2") );
                 
             }
             Console.WriteLine();
 
 
             Console.WriteLine("\n Sorted by Decending: \n");
-            List<Orders> SortedListDescending  = order.OrderByDescending(o => o.date).ToList();
+            List<Orders> SortedListDescending  = order.OrderByDescending(o => o.Date).ToList();
 
             foreach (var o in SortedListDescending)
             {
-                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
+                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
 
 
             }
@@ -287,7 +290,7 @@ namespace Main
 
             foreach (var o in SortedListCost)
             {
-                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
+                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
 
             }
             Console.WriteLine();
@@ -297,7 +300,7 @@ namespace Main
 
             foreach (var o in SortedListDescendingCost)
             {
-                Console.Write(o.date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
+                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.cost.ToString("C2"));
 
 
             }
@@ -313,44 +316,112 @@ namespace Main
         public void serializeToXML()
         {
             SerializeToFile(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml", order);
-
-
-        }
-
-        public static void SerializeToFile(string fileName, List<Orders> order)
-        {
-           // XmlSerializer serializer = new XmlSerializer(typeof(Orders));
-            var serializer = new XmlSerializer(typeof(List<Orders>));
-            FileStream fileStream = null;
-
-            try
-            {
-                fileStream = new FileStream(fileName, FileMode.Create);
-                serializer.Serialize(fileStream, order);
-            }
-            catch (PathTooLongException ex)
-            {
-                Console.WriteLine($"Path {fileName} was too long! {ex.Message}");
-            }
-            catch (IOException ex)
-            {
-                Console.WriteLine($"Some other error with file I/O: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                throw; // re-throws the same exception
-            }
-            finally
-            {
-                if (fileStream != null)
-                {
-                    fileStream.Dispose();
-                }
-            }
             
 
         }
+     
+
+        public static void SerializeToFile(string fileName, List<Orders> order)
+        {
+            // XmlSerializer serializer = new XmlSerializer(typeof(Orders));
+             var serializer = new XmlSerializer(typeof(List<Orders>));
+             FileStream fileStream = null;
+
+             try
+             {
+                 fileStream = new FileStream(fileName, FileMode.Create);
+                 serializer.Serialize(fileStream, order);
+             }
+             catch (PathTooLongException ex)
+             {
+                 Console.WriteLine($"Path {fileName} was too long! {ex.Message}");
+             }
+             catch (IOException ex)
+             {
+                 Console.WriteLine($"Some other error with file I/O: {ex.Message}");
+             }
+             catch (Exception ex)
+             {
+                 Console.WriteLine($"Unexpected error: {ex.Message}");
+                 throw; // re-throws the same exception
+             }
+             finally
+             {
+                 if (fileStream != null)
+                 {
+                     fileStream.Dispose();
+                 }
+             }
+
+
+
+           /* XmlSerializer serializer = new XmlSerializer(typeof(List<Orders>));
+            using (FileStream stream = File.OpenWrite(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml"))
+            {
+                order = new List<Orders>();
+                serializer.Serialize(stream, order);
+            }*/
+
+
+        }
+
+
+        public void DeSerializeAsync()
+        {
+
+            //await DeserializeFromFileAsync(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml");
+            /*
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Orders>));
+            using (FileStream stream = File.OpenRead(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml"))
+            {
+                List<Orders> dezerializedList = (List<Orders>)serializer.Deserialize(stream);
+            }
+            */
+
+
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Orders>));
+
+            using (FileStream stream = File.OpenWrite(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml"))
+            {
+                
+                serializer.Serialize(stream, order);
+            }
+            List<Orders> dezerializedList;
+            using (FileStream stream = File.OpenRead(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml"))
+            {
+                 dezerializedList = (List<Orders>)serializer.Deserialize(stream);
+            }
+
+            order = dezerializedList;
+
+
+
+
+
+        }
+
+        // Method to deserialize a file from xlm format.
+        public async static Task<IEnumerable<Orders>> DeserializeFromFileAsync(string fileName)
+        {
+            var serializer = new XmlSerializer(typeof(List<Orders>));
+
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var fileStream = new FileStream(fileName, FileMode.Open))
+                {
+                    await fileStream.CopyToAsync(memoryStream);
+                }
+                memoryStream.Position = 0; // reset "cursor" of stream to beginning
+               
+                return (List<Orders>)serializer.Deserialize(memoryStream);
+
+            }
+        }
+
+
+     
+
+
 
     }
 }

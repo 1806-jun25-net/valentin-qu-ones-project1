@@ -7,7 +7,7 @@ namespace Pizza.Library
 {
     public class Name
     {
-       
+        [XmlAttribute]
         public string First { get; set; }
         public string Last { get; set; }
     }

@@ -197,6 +197,12 @@ namespace Main
 
                     }
 
+                    if (option == 10)
+                    {
+
+                        m.DeSerializeAsync();
+                    }
+
                 }
                 catch (FormatException ex)
                 {
@@ -206,6 +212,9 @@ namespace Main
 
                 }
             }
+
+
+
         }
 
     }
