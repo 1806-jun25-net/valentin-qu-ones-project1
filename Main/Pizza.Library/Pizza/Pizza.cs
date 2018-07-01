@@ -7,8 +7,7 @@ namespace Pizza.Library.Pizza
 {
     public class Pizza
     {
-        [XmlAttribute]
-        //public int Id { get; set; }
+        
         public Ingredients toppings { get; set; }
         public double cost { get; set; }
 

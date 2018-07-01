@@ -2,8 +2,10 @@
 using Pizza.Library.Pizza;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Main
 {
@@ -31,9 +33,12 @@ namespace Main
         }
 
         public List<Ingredients> ingredients = new List<Ingredients>();
-
+       // private XMLMethods xml = new XMLMethods();
         public List<Orders> order = new List<Orders>();
         IEnumerable<Orders> result = new List<Orders>();
+        
+
+
 
 
         public void PopulateInventory()
@@ -94,6 +99,7 @@ namespace Main
                     Random r = new Random();
                     double rDouble = r.NextDouble() * range; //for the cost of the pizza in total.
 
+
                     order.Add(new Orders
                     {
                         Id = idOrder,
@@ -126,7 +132,7 @@ namespace Main
 
 
                             },
-                            cost = rDouble
+                            cost = Math.Round(rDouble, 2)
 
 
                         },
@@ -301,6 +307,48 @@ namespace Main
 
 
 
+
+        }
+
+        public void serializeToXML()
+        {
+            SerializeToFile(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml", order);
+
+
+        }
+
+        public static void SerializeToFile(string fileName, List<Orders> order)
+        {
+           // XmlSerializer serializer = new XmlSerializer(typeof(Orders));
+            var serializer = new XmlSerializer(typeof(List<Orders>));
+            FileStream fileStream = null;
+
+            try
+            {
+                fileStream = new FileStream(fileName, FileMode.Create);
+                serializer.Serialize(fileStream, order);
+            }
+            catch (PathTooLongException ex)
+            {
+                Console.WriteLine($"Path {fileName} was too long! {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Some other error with file I/O: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                throw; // re-throws the same exception
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Dispose();
+                }
+            }
+            
 
         }
 

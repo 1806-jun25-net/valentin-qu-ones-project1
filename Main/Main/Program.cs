@@ -1,6 +1,7 @@
 ﻿using Pizza.Library.Pizza;
 using System;
 using System.Collections.Generic;
+using NLog;
 
 namespace Main
 {
@@ -103,11 +104,16 @@ namespace Main
                                         }
                                         catch (FormatException ex)
                                         {
+                                            Logger logger = LogManager.GetCurrentClassLogger();
+                                            logger.ErrorException("Format Error", ex);
                                             Console.WriteLine($"Unexpected error: {ex.Message}");
 
                                         }
                                         catch (Exception ex)
                                         {
+
+                                            Logger logger = LogManager.GetCurrentClassLogger();
+                                            logger.ErrorException("Format Error", ex);
                                             Console.WriteLine($"Unexpected error: {ex.Message}");
 
                                         }
@@ -122,11 +128,15 @@ namespace Main
                         }
                         catch (FormatException ex)
                         {
+                            Logger logger = LogManager.GetCurrentClassLogger();
+                            logger.ErrorException("Format Error", ex);
                             Console.WriteLine($"Unexpected error: {ex.Message}");
 
                         }
                         catch (Exception ex)
                         {
+                            Logger logger = LogManager.GetCurrentClassLogger();
+                            logger.ErrorException("Format Error", ex);
                             Console.WriteLine($"Unexpected error: {ex.Message}");
 
                         }
@@ -175,16 +185,23 @@ namespace Main
                         m.DisplayOrdersByUser(int.Parse(Console.ReadLine()));
 
                     }
+
                     if (option == 8)
                     {
                         m.SortByAll();
                     }
 
+                    if (option == 9)
+                    {
+                        m.serializeToXML();
 
+                    }
 
                 }
                 catch (FormatException ex)
                 {
+                    Logger logger = LogManager.GetCurrentClassLogger();
+                    logger.ErrorException("Format Error: ", ex);
                     Console.WriteLine(ex);
 
                 }
