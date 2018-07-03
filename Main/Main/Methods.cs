@@ -366,18 +366,10 @@ namespace Main
         }
 
 
-        public void DeSerializeAsync()
+        public void Dezerialized()
         {
-
-            //await DeserializeFromFileAsync(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml");
-            /*
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Orders>));
-            using (FileStream stream = File.OpenRead(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml"))
-            {
-                List<Orders> dezerializedList = (List<Orders>)serializer.Deserialize(stream);
-            }
-            */
-
+            //The dezerialized method works but if open and close the program an call the method it just
+            // brings an error that i have multiple 
 
             XmlSerializer serializer = new XmlSerializer(typeof(List<Orders>));
 
@@ -393,10 +385,6 @@ namespace Main
             }
 
             order = dezerializedList;
-
-
-
-
 
         }
 

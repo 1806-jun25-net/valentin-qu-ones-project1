@@ -70,10 +70,12 @@ namespace XUnitTestMethods
         {
             try
             {
+                //arange
                 int range = 100;
                 Random r = new Random();
                 double rDouble = r.NextDouble() * range; //for the cost of the pizza in total.
 
+                //act
                 order.Add(new Orders
                 {
                     User = new User
@@ -117,6 +119,7 @@ namespace XUnitTestMethods
 
                 ingredients[topp].qty -= qty1;
                 Console.WriteLine(ingredients[topp].qty.ToString() + " Amount of " + ingredients[topp].ToString() + " left.");
+                //assert is handle by the catch block if we encounter a error of some sort.
             }
             catch (Exception ex)
             {
@@ -131,6 +134,8 @@ namespace XUnitTestMethods
         {
 
             var result = Enumerable.Range(0, order.Count).Where(i => order[i].User.Id == suggestion).ToList();
+            //assert
+           // Assert.AreEqual(expected, suggestion);
 
         }
         
