@@ -6,10 +6,11 @@ using Pizza.Library.Pizza;
 
 namespace Pizza.Library
 {
+    [Serializable()]
     public class Orders: IComparable<Orders>
     {
         [XmlAttribute]
-
+        
         public int Id { get; set; }
         public string Location { get; set; }
         public User User { get; set; }
