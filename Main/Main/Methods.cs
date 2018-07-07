@@ -46,7 +46,8 @@ namespace Main
 
         public void PopulateInventory()
         {
-
+            #region Not in use
+            /*
             ingredients.Add(new Ingredients
             {
 
@@ -73,6 +74,12 @@ namespace Main
 
             Console.WriteLine("Inventory Populated!");
             Console.WriteLine("");
+            */
+            #endregion
+
+
+
+
 
         }
 
@@ -92,7 +99,7 @@ namespace Main
 
 
 
-        public void OrderPizza(int idOrder, string location, int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1, DateTime date)
+        public void OrderPizza(int idOrder, string location, int idUser, string fName, string lName, string adLine, string adCity, string state, int topp, int qty1, DateTime date, string email)
         {
             try
             {
@@ -116,6 +123,7 @@ namespace Main
                                 First = fName,
                                 Last = lName
                             },
+                            Email = email,
                             Address = new Address
                             {
                                 Line1 = adLine,
@@ -243,13 +251,13 @@ namespace Main
 
         }
 
-        public void DisplayOrdersByUser(int id)
+        public void DisplayOrdersByUser(string email)
         {
             for (int i = 0; i < order.Count; i++)
             {
-                if (int.Parse(order[i].User.Id.ToString()) == id)
+                if (order[i].User.Email.ToString() == email)
                 {
-                    Console.WriteLine($"UserID: {id}");
+                    Console.WriteLine($"UserID: {order[i].User.Id}");
                     Console.WriteLine("User: " + order[i].User.Name.First.ToString() + " " + order[i].User.Name.Last.ToString());
                     Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.cost.ToString());
 
@@ -359,7 +367,7 @@ namespace Main
 
 
 
-          
+
 
 
         }
@@ -370,14 +378,14 @@ namespace Main
             //Was having proublems with the dezerialize but it was 
             //cause i was not moving the position back to 0 and i was not giving the result back to any variable to store it.
             FileStream fileStream = null;
-            
+
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(List<Orders>));
 
                 using (var memoryStream = new MemoryStream())
                 {
-                    using ( fileStream = new FileStream(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml", FileMode.Open))
+                    using (fileStream = new FileStream(@"C:\Revature\Proyect 1\Main\Main\bin\Debug\netcoreapp2.1\data.xml", FileMode.Open))
                     {
                         await fileStream.CopyToAsync(memoryStream);
                     }
@@ -409,9 +417,22 @@ namespace Main
 
 
         }
-        
-        
-        
+
+
+        public bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);//Command to compare the string to a email format.
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
         #region Not Used Methods on Main
         // Method to deserialize a file from xlm format. Is not currently in use...
         public async static Task<IEnumerable<Orders>> DeserializeFromFileAsync(string fileName)

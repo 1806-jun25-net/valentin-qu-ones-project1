@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 using NLog;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Main
 {
@@ -10,9 +14,24 @@ namespace Main
         static void Main(string[] args)
         {
 
+            #region Database
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("Appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            Console.WriteLine(configuration.GetConnectionString("PizzaPalace"));
+
+
+
+            #endregion
+
+
             int option = 1;
             Methods m = new Methods();
-            //string[] toppingsOfPizza = new string[3] { "Bacon", "Peperonie", "Sausagge" };
+            
 
 
             while (option != 0)
@@ -69,6 +88,8 @@ namespace Main
                                             string location = Console.ReadLine();
                                             Console.WriteLine("Enter your ID: ");
                                             string ID = Console.ReadLine();
+                                            Console.WriteLine("Enter your Email: ");
+                                            string email = Console.ReadLine();
 
                                             Console.WriteLine("Enter your First Name: ");
                                             string fName = Console.ReadLine();
@@ -80,25 +101,31 @@ namespace Main
                                             string adCity = Console.ReadLine();
                                             Console.WriteLine("Enter your State: ");
                                             string adState = Console.ReadLine();
-                                            Console.WriteLine("Enter date: ");
-                                            string date = Console.ReadLine();
+
                                             #endregion
 
                                             Console.WriteLine("How many " + m.ingredients[pizzaOption].topping.ToString() + " Pizza do you want? ");
                                             pizzaQty = int.Parse(Console.ReadLine());
-
-                                            if (int.TryParse(pizzaQty.ToString(), out i))
+                                            if (m.IsValidEmail(email) == true)
                                             {
-                                                if (pizzaQty <= m.ingredients[pizzaOption].qty)
+                                                if (int.TryParse(pizzaQty.ToString(), out i))
                                                 {
-                                                    m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty, DateTime.Parse(date));
+                                                    if (pizzaQty <= m.ingredients[pizzaOption].qty)
+                                                    {
+                                                        m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty, DateTime.Now, email);
+
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine("We are low on stock at the moment. Please try again later. Thanks.");
+                                                    }
+
 
                                                 }
-                                                else
-                                                {
-                                                    Console.WriteLine("We are low on stock at the moment. Please try again later. Thanks.");
-                                                }
-
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Invalid Email!");
 
                                             }
                                         }
@@ -181,8 +208,8 @@ namespace Main
 
                     if (option == 7)
                     {
-                        Console.WriteLine("Enter a UserID you want to view the order history from: ");
-                        m.DisplayOrdersByUser(int.Parse(Console.ReadLine()));
+                        Console.WriteLine("Enter a email from user you want to view the order history from: ");
+                        m.DisplayOrdersByUser(Console.ReadLine());
 
                     }
 
