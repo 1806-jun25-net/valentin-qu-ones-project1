@@ -44,7 +44,7 @@ namespace Main
                     //This if will call a method an populate the inventory.
                     if (option == 1)
                     {
-                        m.PopulateInventory();
+                        m.LoadFromDB();
 
                     }
 
@@ -55,7 +55,7 @@ namespace Main
 
 
                         Console.WriteLine("These are the options for your pizza. Choose one: ");
-                        m.PrintIngredients();
+                        m.PrintPizza();
                         Console.WriteLine();
 
                         try
@@ -85,7 +85,7 @@ namespace Main
                                             Console.WriteLine("Lets place a order but first. Fill the require  information about you. ");
                                             Console.WriteLine("Order ID: " + rInt);
                                             Console.WriteLine("What is the location of the store: ");
-                                            string location = Console.ReadLine();
+                                            int location = int.Parse(Console.ReadLine());
                                             Console.WriteLine("Enter your ID: ");
                                             string ID = Console.ReadLine();
                                             Console.WriteLine("Enter your Email: ");
@@ -104,15 +104,15 @@ namespace Main
 
                                             #endregion
 
-                                            Console.WriteLine("How many " + m.ingredients[pizzaOption].topping.ToString() + " Pizza do you want? ");
+                                            Console.WriteLine("How many " + m.piz[pizzaOption].NamePizza.ToString() + " Pizza do you want? ");
                                             pizzaQty = int.Parse(Console.ReadLine());
                                             if (m.IsValidEmail(email) == true)
                                             {
                                                 if (int.TryParse(pizzaQty.ToString(), out i))
                                                 {
-                                                    if (pizzaQty <= m.ingredients[pizzaOption].qty)
+                                                    if (pizzaQty <= m.piz[pizzaOption].CountPizza)
                                                     {
-                                                        m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, adCity, adState, pizzaOption, pizzaQty, DateTime.Now, email);
+                                                        m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, pizzaOption, pizzaQty, DateTime.Now, email);
 
                                                     }
                                                     else
@@ -188,7 +188,7 @@ namespace Main
                     if (option == 4)
                     {
                         Console.WriteLine("Enter a Name to display its data: ");
-                        m.SearchUser(Console.ReadLine());
+                        m.SearchUser(int.Parse(Console.ReadLine()));
 
                     }
 

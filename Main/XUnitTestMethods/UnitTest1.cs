@@ -90,8 +90,7 @@ namespace XUnitTestMethods
                         Address = new Address
                         {
                             Line1 = adLine,
-                            City = adCity,
-                            State = state
+                           
                         }
 
                     },
@@ -99,14 +98,7 @@ namespace XUnitTestMethods
 
                     Pizza = new Pizza.Library.Pizza.Pizza
                     {
-                        toppings = new Ingredients
-                        {
-                            topping = ingredients[topp].ToString(),
-
-
-
-                        },
-                        cost = rDouble
+                        
 
 
                     },
@@ -152,6 +144,17 @@ namespace XUnitTestMethods
                 return false;
             }
         }
+
+
+        public void PopulateInvenentory()
+        {
+            
+
+        }
+
+       
+
+
 
 
     }

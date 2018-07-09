@@ -25,8 +25,8 @@ namespace Store.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-  //              optionsBuilder.UseSqlServer();
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+
             }
         }
 
@@ -102,6 +102,8 @@ namespace Store.Data
                 entity.Property(e => e.UserIdUser).HasColumnName("User_idUser");
 
                 entity.Property(e => e.UserLocationIdLocation).HasColumnName("User_Location_idLocation");
+
+                entity.Property(e => e.DateOfOrders).HasColumnType("date");
 
                 entity.HasOne(d => d.LocationIdLocationNavigation)
                     .WithMany(p => p.Orders)

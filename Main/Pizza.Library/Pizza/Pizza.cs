@@ -8,8 +8,10 @@ namespace Pizza.Library.Pizza
     public class Pizza
     {
         
-        public Ingredients toppings { get; set; }
-        public double cost { get; set; }
+        public int IdPizza { get; set; }
+        public string NamePizza { get; set; }
+        public int CountPizza { get; set; }
+        public decimal CostPizza { get; set; }
 
 
 

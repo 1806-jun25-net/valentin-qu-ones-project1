@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pizza.Library\Pizza.Library.csproj" />
+    <ProjectReference Include="..\Store.Data\Store.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

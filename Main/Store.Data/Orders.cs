@@ -14,6 +14,7 @@ namespace Store.Data
         public int LocationIdLocation { get; set; }
         public int UserIdUser { get; set; }
         public int UserLocationIdLocation { get; set; }
+        public DateTime? DateOfOrders { get; set; }
 
         public Location LocationIdLocationNavigation { get; set; }
         public ICollection<OrderHasPizza> OrderHasPizza { get; set; }
