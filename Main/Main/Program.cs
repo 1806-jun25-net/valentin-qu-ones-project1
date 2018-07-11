@@ -65,54 +65,42 @@ namespace Main
                             int i;
                             int count = 0;
 
-                            Random r = new Random();//For random integers that would be use to create random ID's.
-                            int rInt = r.Next(1, 100);//With a range of 1 to 100.
-
-
-
-
                             if (int.TryParse(pizzaOption.ToString(), out i))
                             {
                                 count++;
                                 if (count == 1)
                                 {
-                                    if (pizzaOption >= 0 && pizzaOption <= 2)
+                                    if (pizzaOption >= 0)
                                     {
                                         try
                                         {
 
                                             #region UserInfo
                                             Console.WriteLine("Lets place a order but first. Fill the require  information about you. ");
-                                            Console.WriteLine("Order ID: " + rInt);
-                                            Console.WriteLine("What is the location of the store: ");
-                                            int location = int.Parse(Console.ReadLine());
-                                            Console.WriteLine("Enter your ID: ");
-                                            string ID = Console.ReadLine();
-                                            Console.WriteLine("Enter your Email: ");
-                                            string email = Console.ReadLine();
-
-                                            Console.WriteLine("Enter your First Name: ");
+                                            Console.WriteLine("Enter the First Name: ");
                                             string fName = Console.ReadLine();
-                                            Console.WriteLine("Enter your Last Name");
+                                            Console.WriteLine("Enter the Last Name: ");
                                             string lName = Console.ReadLine();
-                                            Console.WriteLine("Enter your Address: ");
-                                            string adLine = Console.ReadLine();
-                                            Console.WriteLine("Enter your City: ");
-                                            string adCity = Console.ReadLine();
-                                            Console.WriteLine("Enter your State: ");
-                                            string adState = Console.ReadLine();
+                                            m.SearchUser(fName,lName);
 
+                                            Console.WriteLine("Enter the user ID you want to use the order with: ");
+                                            int userID = int.Parse(Console.ReadLine());
+
+                                            m.PrintLocations();
+                                            Console.WriteLine("What is the location ID of the store: ");
+                                            int locationID = int.Parse(Console.ReadLine());
+
+                                            
                                             #endregion
 
                                             Console.WriteLine("How many " + m.piz[pizzaOption].NamePizza.ToString() + " Pizza do you want? ");
                                             pizzaQty = int.Parse(Console.ReadLine());
-                                            if (m.IsValidEmail(email) == true)
-                                            {
+                                            
                                                 if (int.TryParse(pizzaQty.ToString(), out i))
                                                 {
-                                                    if (pizzaQty <= m.piz[pizzaOption].CountPizza)
+                                                    if (pizzaQty <= int.Parse(m.piz[pizzaOption].CountPizza.ToString()))
                                                     {
-                                                        m.OrderPizza(rInt, location, int.Parse(ID), fName, lName, adLine, pizzaOption, pizzaQty, DateTime.Now, email);
+                                                       m.OrderPizza(userID, locationID, pizzaOption, pizzaQty);
 
                                                     }
                                                     else
@@ -122,12 +110,7 @@ namespace Main
 
 
                                                 }
-                                            }
-                                            else
-                                            {
-                                                Console.WriteLine("Invalid Email!");
-
-                                            }
+                                            
                                         }
                                         catch (FormatException ex)
                                         {
@@ -179,8 +162,8 @@ namespace Main
                     if (option == 3)
                     {
                         Console.WriteLine("Enter a user ID to search the suggested pizza: ");
-                        m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
-
+                         m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
+                       // m.getCountOfList();
 
                     }
 
@@ -188,7 +171,10 @@ namespace Main
                     if (option == 4)
                     {
                         Console.WriteLine("Enter a Name to display its data: ");
-                        m.SearchUser(int.Parse(Console.ReadLine()));
+                        var name = Console.ReadLine();
+                        Console.WriteLine("Enter Last Name: ");
+                        var lName = Console.ReadLine();
+                        m.SearchUser(name, lName);
 
                     }
 
@@ -203,12 +189,12 @@ namespace Main
                     if (option == 6)
                     {
                         Console.WriteLine("What is the location of the store you are looking for? ");
-                        m.DisplayOrderByLocation(Console.ReadLine());
+                        m.DisplayOrderByLocation(int.Parse(Console.ReadLine()));
                     }
 
                     if (option == 7)
                     {
-                        Console.WriteLine("Enter a email from user you want to view the order history from: ");
+                        Console.WriteLine("Enter a ID from user you want to view the order history from: ");
                         m.DisplayOrdersByUser(Console.ReadLine());
 
                     }

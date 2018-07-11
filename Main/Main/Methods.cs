@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using NLog;
 using Pizza.Library;
 using Pizza.Library.Pizza;
 using Store.Data;
@@ -23,7 +25,19 @@ namespace Main
 
         #endregion
 
+        #region list And Variables
+        public List<Pizza.Library.Pizza.Pizza> piz = new List<Pizza.Library.Pizza.Pizza>();
+        // private XMLMethods xml = new XMLMethods();
+        public List<Pizza.Library.Orders> order = new List<Pizza.Library.Orders>();
+        public List<Address> location = new List<Address>();
+        IEnumerable<Pizza.Library.Orders> result = new List<Pizza.Library.Orders>();
+        public List<User> users = new List<User>();
+        List<OrderHasPizza> orderHasPizzas = new List<OrderHasPizza>();
+        List<Store.Data.Orders> stOrder = new List<Store.Data.Orders>();
 
+        Task<IEnumerable<Pizza.Library.Orders>> desListTask = DeserializeFromFileAsync(@"C:\Users\Revature\Desktop\data.xml");
+
+        #endregion
 
         public void PrintAll()
         {
@@ -44,18 +58,6 @@ namespace Main
             Console.WriteLine("");
 
         }
-
-        public List<Pizza.Library.Pizza.Pizza> piz = new List<Pizza.Library.Pizza.Pizza>();
-        // private XMLMethods xml = new XMLMethods();
-        public List<Pizza.Library.Orders> order = new List<Pizza.Library.Orders>();
-        public List<Address> location = new List<Address>();
-        IEnumerable<Pizza.Library.Orders> result = new List<Pizza.Library.Orders>();
-        public List<User> users = new List<User>();
-        List<OrderHasPizza> orderHasPizzas = new List<OrderHasPizza>();
-        List<Store.Data.Orders> stOrder = new List<Store.Data.Orders>();
-
-        Task<IEnumerable<Pizza.Library.Orders>> desListTask = DeserializeFromFileAsync(@"C:\Users\Revature\Desktop\data.xml");
-
 
 
 
@@ -112,7 +114,7 @@ namespace Main
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPalace"));
             var repo = new PizzaStoreRepository(new PizzaPalaceContext(optionsBuilder.Options));
 
-            var pizza = repo.GetPizzas();//*izza
+            var pizza = repo.GetPizzas();//*Pizza
             var userin = repo.GetUserInfo();//UserInformation
             var locations = repo.GetLocations();//Locations
             var orderHas = repo.GetOrderHasPizzas();//Order_Has_Pizza
@@ -162,7 +164,7 @@ namespace Main
 
                         });
                     }
-                        
+
                 }
             }
 
@@ -219,112 +221,87 @@ namespace Main
                     DateOfOrders = item.DateOfOrders,
 
 
-                    
+
 
                 });
 
 
             }
 
-            #region All tables combined inside a object to be able to use it inside the program.
 
-            foreach (var itemHas in orderHas)
+
+            try
             {
-
-                foreach (var itemDb in orderDb)
+                //Method used to convert all database informtaion to process it into a List
+                int count = 0;
+                foreach (var itemOrd in orderDb)
                 {
 
-                    if (itemHas.IdOrderHasPizza == itemDb.IdOrder)
+                    if (itemOrd.IdOrder == orderHasPizzas[count].OrderIdOrder)
                     {
-                        foreach (var itemUser in userin)
+
+                        order.Add(new Pizza.Library.Orders
                         {
 
-                            if (itemHas.OrderUserIdUser == itemUser.IdUser)
+
+                            Id = int.Parse(orderHasPizzas[count].OrderIdOrder.ToString()),
+                            Location = int.Parse(orderHasPizzas[count].OrderLocationIdLocation.ToString()),
+                            User = new User
                             {
 
-                                foreach (var itemPizza in pizza)
+                                Id = int.Parse(users[count].Id.ToString()),
+                                Name = new Name
                                 {
-
-                                    if (itemHas.PizzaIdPizza == itemPizza.IdPizza)
-                                    {
-
-                                        foreach (var itemLoc in locations)
-                                        {
-                                            if (itemHas.OrderLocationIdLocation == itemLoc.IdLocation)
-                                            {
-
-
-                                                order.Add(new Pizza.Library.Orders
-                                                {
-
-
-                                                    Id = int.Parse(itemDb.IdOrder.ToString()),
-                                                    Location = int.Parse(itemDb.LocationIdLocation.ToString()),
-                                                    User = new User
-                                                    {
-
-                                                        Id = int.Parse(itemUser.IdUser.ToString()),
-                                                        Name = new Name
-                                                        {
-                                                            First = itemUser.FirstName,
-                                                            Last = itemUser.LastName
-                                                        },
-                                                        Address = new Address
-                                                        {
-                                                            IdAddress = int.Parse(itemLoc.IdLocation.ToString()),
-                                                            Line1 = itemLoc.LocationName
-
-                                                        }
-
-                                                    },
-                                                    Pizza = new Pizza.Library.Pizza.Pizza
-                                                    {
-                                                        IdPizza = int.Parse(itemPizza.IdPizza.ToString()),
-                                                        NamePizza = itemPizza.PizzaName.ToString(),
-                                                        CountPizza = int.Parse(itemPizza.PiizaCount.ToString()),
-                                                        CostPizza = decimal.Parse(itemPizza.PizzaPrice.ToString())
-
-
-                                                    },
-                                                    AmountOfPizza = int.Parse(itemHas.AmountOfPizzaInOrder.ToString()),
-                                                    Date = DateTime.Parse(itemDb.DateOfOrders.ToString())
-
-
-
-
-                                                });
-
-
-
-                                            }
-                                        }
-
-                                    }
-
+                                    First = users[count].Name.First.ToString(),
+                                    Last = users[count].Name.Last.ToString()
+                                },
+                                Address = new Address
+                                {
+                                    IdAddress = int.Parse(location[count].IdAddress.ToString()),
+                                    Line1 = location[count].Line1.ToString()
 
                                 }
 
-                            }
+                            },
+                            Pizza = new Pizza.Library.Pizza.Pizza
+                            {
+                                IdPizza = int.Parse(piz[count].IdPizza.ToString()),
+                                NamePizza = piz[count].NamePizza.ToString(),
+                                CountPizza = int.Parse(piz[count].CountPizza.ToString()),
+                                CostPizza = decimal.Parse(piz[count].CostPizza.ToString())
 
 
-                        }
-                        
+                            },
+                            AmountOfPizza = int.Parse(orderHasPizzas[count].AmountOfPizzaInOrder.ToString()),
+                            Date = DateTime.Parse(stOrder[count].DateOfOrders.ToString())
+
+                        });
+
+                        count++;
 
                     }
 
 
                 }
+            }
+            catch (FormatException ex)
+            {
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
 
+            }
+            catch (Exception ex)
+            {
+
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
 
             }
 
-            #endregion
-
 
         }
-
-
-      
 
         public void PrintPizza()
         {
@@ -340,71 +317,65 @@ namespace Main
 
 
 
+        public void PrintLocations()
+        {
+            foreach (var item in location)
+            {
+                Console.WriteLine("Location ID: " + item.IdAddress.ToString() + "Location Name: " + item.Line1.ToString());
+            }
+        }
 
 
-        public void OrderPizza(int idOrder, int location, int idUser, string fName, string lName, string stateLocation, int idPizza, int qty1Pizza, DateTime date, string email)
+        public void OrderPizza(int userID, int locationID, int idPizza, int qty1Pizza)
         {
 
-            #region Database
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("Appsettings.json", optional: true, reloadOnChange: true);
-
-            IConfigurationRoot configuration = builder.Build();
-
-            Console.WriteLine(configuration.GetConnectionString("PizzaPalace"));
 
 
-            var optionsBuilder = new DbContextOptionsBuilder<PizzaPalaceContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPalace"));
-            var repo = new PizzaStoreRepository(new PizzaPalaceContext(optionsBuilder.Options));
-
-            var pizza = repo.GetPizzas();
 
 
-            #endregion
 
 
-            string pizName = "";
-            decimal price = 0;
 
+
+            /*
             foreach (var item in pizza)
             {
                 if (item.IdPizza == idPizza)
                 {
                     pizName = item.PizzaName;
                     price = decimal.Parse(item.PizzaPrice.ToString());
+
                 }
 
             }
-
+            */
 
             try
             {
                 if (qty1Pizza <= 12)
                 {
-                    int range = 25;
-                    Random r = new Random();
-                    double rDouble = r.NextDouble() * range; //for the cost of the pizza in total.
+
+
 
 
                     order.Add(new Pizza.Library.Orders
                     {
-                        Id = idOrder,
-                        Location = location,
+                        Id = 1 + int.Parse(order[order.Count - 1].ToString()),
+                        Location = locationID,
                         User = new User
                         {
 
-                            Id = idUser,
+                            Id = int.Parse(users[userID - 1].Id.ToString()),
                             Name = new Name
                             {
-                                First = fName,
-                                Last = lName
+                                First = users[userID - 1].Name.First.ToString(),
+                                Last = users[userID - 1].Name.Last.ToString()
                             },
 
                             Address = new Address
                             {
-                                Line1 = stateLocation
+                                IdAddress = int.Parse(users[userID - 1].Address.IdAddress.ToString()),
+                                Line1 = users[userID - 1].Address.Line1.ToString()
                             }
 
                         },
@@ -412,22 +383,24 @@ namespace Main
 
                         Pizza = new Pizza.Library.Pizza.Pizza
                         {
-                            NamePizza = pizName,
-                            CostPizza = price
+                            IdPizza = int.Parse(piz[idPizza].IdPizza.ToString()),
+                            NamePizza = piz[idPizza].NamePizza.ToString(),
+                            CostPizza = decimal.Parse(piz[idPizza].CostPizza.ToString()),
+                            CountPizza = qty1Pizza
 
 
 
 
                         },
                         AmountOfPizza = qty1Pizza,
-                        Date = date
+                        Date = DateTime.Now
 
 
 
 
                     });
 
-                    piz[idPizza].CostPizza -= qty1Pizza;
+                    piz[idPizza].CountPizza -= qty1Pizza;
                     Console.WriteLine(piz[idPizza].CountPizza + " Amount of " + piz[idPizza].NamePizza + " left.");
                 }
                 else
@@ -475,15 +448,19 @@ namespace Main
 
         }
 
-        public void SearchUser(int id)
+        public void SearchUser(string name, string lastname)
         {
             //Search a user with his primary name i know is not efficient and is not safe to do this.
             for (int i = 0; i < users.Count; i++)
             {
-                if (int.Parse(users[i].Id.ToString()) == id)
+                if (users[i].Name.First.ToString() == name)
                 {
-                    Console.WriteLine("Information that was found: " + users[i].Name.First.ToString() + " " + users[i].Name.Last.ToString() + " Adress: " + users[i].Address.Line1.ToString() + " ");
+                    if (users[i].Name.Last.ToString() == lastname)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("ID of User: " + users[i].Id.ToString() + " \n Information that was found: " + users[i].Name.First.ToString() + " " + users[i].Name.Last.ToString() + " \n Adress: " + users[i].Address.Line1.ToString() + " ");
 
+                    }
                 }
             }
 
@@ -493,29 +470,46 @@ namespace Main
         public void DisplayOrderByID(int id)
         {
             //Display order by id.
-
-            for (int i = 0; i < order.Count; i++)
+            try
             {
-                if (int.Parse(order[i].Id.ToString()) == id)
+                for (int i = 0; i < order.Count; i++)
                 {
+                    if (int.Parse(order[i].Id.ToString()) == id)
+                    {
 
-                    // Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + id + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.CostPizza.ToString());
+                        Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + id + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.NamePizza.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.CostPizza.ToString());
 
+                    }
                 }
+            }
+            catch (FormatException ex)
+            {
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+
+            }
+            catch (Exception ex)
+            {
+
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+
             }
 
 
         }
 
-        public void DisplayOrderByLocation(string location)
+        public void DisplayOrderByLocation(int id)
         {
             //Method to display orders of a location
             for (int i = 0; i < order.Count; i++)
             {
-                if (order[i].Location.ToString() == location)
+                if (int.Parse(order[i].Location.ToString()) == id)
                 {
 
-                    // Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.CostPizza.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.NamePizza.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.CostPizza.ToString());
 
                 }
             }
@@ -523,76 +517,98 @@ namespace Main
 
         }
 
-        public void DisplayOrdersByUser(string email)
+        public void DisplayOrdersByUser(string id)
         {
             for (int i = 0; i < order.Count; i++)
             {
-                /*if (order[i].User.Email.ToString() == email)
+                if (order[i].User.Id.ToString() == id)
                 {
                     Console.WriteLine($"UserID: {order[i].User.Id}");
                     Console.WriteLine("User: " + order[i].User.Name.First.ToString() + " " + order[i].User.Name.Last.ToString());
-                   // Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.toppings.topping.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.CostPizza.ToString());
+                    Console.WriteLine("Order details: \n " + order[i].Date.ToShortDateString() + "\n Order ID: " + order[i].Id.ToString() + "\n Location of Store: " + order[i].Location.ToString() + "\n Pizza was: " + order[i].Pizza.NamePizza.ToString() + "\n Amount: " + order[i].AmountOfPizza.ToString() + "\n The total was: " + order[i].Pizza.CostPizza.ToString());
 
-                }*/
+                }
             }
         }
 
         public void SortByAll()
         {
             //List contains a method call OrderBy if given the correct parameters u can order the list in any way you want.   
-            Console.WriteLine("\n Sorted by Acending Date: \n");
-            List<Pizza.Library.Orders> SortedList = order.OrderBy(o => o.Date).ToList();
-
-            foreach (var o in SortedList)
+            try
             {
-                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
-                Console.WriteLine();
-            }
-            Console.WriteLine();
+                Console.WriteLine("\n Sorted by Acending Date: \n");
+                List<Pizza.Library.Orders> SortedList = order.OrderBy(o => o.Date).ToList();
 
-
-            Console.WriteLine("\n Sorted by Decending Date: \n");
-            List<Pizza.Library.Orders> SortedListDescending = order.OrderByDescending(o => o.Date).ToList();
-
-            foreach (var o in SortedListDescending)
-            {
-                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
+                foreach (var o in SortedList)
+                {
+                    Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
+                    Console.WriteLine();
+                }
                 Console.WriteLine();
 
-            }
-            Console.WriteLine();
 
+                Console.WriteLine("\n Sorted by Decending Date: \n");
+                List<Pizza.Library.Orders> SortedListDescending = order.OrderByDescending(o => o.Date).ToList();
 
+                foreach (var o in SortedListDescending)
+                {
+                    Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
+                    Console.WriteLine();
 
-
-
-            Console.WriteLine("\n Sorted by Acending Cost: \n");
-            List<Pizza.Library.Orders> SortedListCost = order.OrderBy(o => o.Pizza.CostPizza.ToString()).ToList();
-
-            foreach (var o in SortedListCost)
-            {
-                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-
-            Console.WriteLine("\n Sorted by Decending Cost: \n");
-            List<Pizza.Library.Orders> SortedListDescendingCost = order.OrderByDescending(o => o.Pizza.CostPizza.ToString()).ToList();
-
-            foreach (var o in SortedListDescendingCost)
-            {
-                Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
+                }
                 Console.WriteLine();
 
-            }
-            Console.WriteLine();
 
+
+
+
+                Console.WriteLine("\n Sorted by Acending Cost: \n");
+                List<Pizza.Library.Orders> SortedListCost = order.OrderBy(o => o.Pizza.CostPizza.ToString()).ToList();
+
+                foreach (var o in SortedListCost)
+                {
+                    Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+
+                Console.WriteLine("\n Sorted by Decending Cost: \n");
+                List<Pizza.Library.Orders> SortedListDescendingCost = order.OrderByDescending(o => o.Pizza.CostPizza.ToString()).ToList();
+
+                foreach (var o in SortedListDescendingCost)
+                {
+                    Console.Write(o.Date.ToString() + " Order ID: " + o.Id.ToString() + "\n Name of User: " + o.User.Name.First.ToString() + " " + o.User.Name.Last.ToString() + "\n Order Cost: " + o.Pizza.CostPizza.ToString("C2"));
+                    Console.WriteLine();
+
+                }
+                Console.WriteLine();
+
+            }
+            catch (FormatException ex)
+            {
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+
+            }
+            catch (Exception ex)
+            {
+
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+
+            }
 
 
 
 
 
         }
+
+
+
+        #region xml
 
         public void serializeToXML()
         {
@@ -602,10 +618,9 @@ namespace Main
 
         }
 
-
         public static void SerializeToFile(string fileName, List<Pizza.Library.Orders> order)
         {
-            // XmlSerializer serializer = new XmlSerializer(typeof(Orders));
+            
 
             //Example give in training session to serilaize.
             var serializer = new XmlSerializer(typeof(List<Pizza.Library.Orders>));
@@ -691,18 +706,8 @@ namespace Main
         }
 
 
-        public bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);//Command to compare the string to a email format.
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        #endregion
+
 
 
         #region Not Used Methods on Main
@@ -725,6 +730,19 @@ namespace Main
             }
         }
 
+
+        public bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);//Command to compare the string to a email format.
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         #endregion
 
