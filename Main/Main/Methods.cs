@@ -309,7 +309,7 @@ namespace Main
 
             for (int i = 0; i < piz.Count; i++)
             {
-                Console.WriteLine(i + " The Pizza is : " + piz[i].NamePizza + " and the Quantity: " + piz[i].CountPizza);
+                Console.WriteLine(piz[i].IdPizza.ToString() + " The Pizza is : " + piz[i].NamePizza + " and the Quantity: " + piz[i].CountPizza);
                 Console.WriteLine();
 
             }
@@ -350,22 +350,51 @@ namespace Main
             }
             */
 
-            try
+           /* try
             {
                 if (qty1Pizza <= 12)
                 {
 
+                    int lastIndex = int.Parse(stOrder[stOrder.Count - 1].IdOrder.ToString());
 
 
 
                     order.Add(new Pizza.Library.Orders
                     {
-                        Id = 1 + int.Parse(order[order.Count - 1].ToString()),
+
+                        Id = lastIndex,
+                        Location = locationID,
+                        User = new User
+                        {
+                            Id = userID,
+                            Name = new Name
+                            {
+                                First = users[lastIndex].Name.First.ToString(),
+                                Last = users[lastIndex].Name.Last.ToString()
+                            },
+                            Address = new Address
+                            {
+
+                                IdAddress = locationID,
+                                // Line1 = location[lastIndex]
+
+                            }
+
+                        }
+
+                    });
+
+
+
+                    /*
+                    order.Add(new Pizza.Library.Orders
+                    {
+                        Id = 2 + int.Parse(order[order.Count - 1].ToString()),
                         Location = locationID,
                         User = new User
                         {
 
-                            Id = int.Parse(users[userID - 1].Id.ToString()),
+                            Id = userID,
                             Name = new Name
                             {
                                 First = users[userID - 1].Name.First.ToString(),
@@ -374,6 +403,7 @@ namespace Main
 
                             Address = new Address
                             {
+                                
                                 IdAddress = int.Parse(users[userID - 1].Address.IdAddress.ToString()),
                                 Line1 = users[userID - 1].Address.Line1.ToString()
                             }
@@ -385,7 +415,7 @@ namespace Main
                         {
                             IdPizza = int.Parse(piz[idPizza].IdPizza.ToString()),
                             NamePizza = piz[idPizza].NamePizza.ToString(),
-                            CostPizza = decimal.Parse(piz[idPizza].CostPizza.ToString()),
+                            CostPizza = piz[idPizza].CostPizza,
                             CountPizza = qty1Pizza
 
 
@@ -414,8 +444,9 @@ namespace Main
                 Console.WriteLine($"Unexpected error: {ex.Message}");
 
             }
-
-        }
+            */
+               
+            }
 
 
         public void PrintSuggestedOrder(int suggestion)

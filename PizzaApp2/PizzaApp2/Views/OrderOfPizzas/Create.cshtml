@@ -1,0 +1,48 @@
+﻿@model PizzaApp2.Models.OrderOfPizza
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>OrderOfPizza</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AmountPizza" class="control-label"></label>
+                <input asp-for="AmountPizza" class="form-control" />
+                <span asp-validation-for="AmountPizza" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdUsers" class="control-label"></label>
+                <input asp-for="IdUsers" class="form-control" />
+                <span asp-validation-for="IdUsers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdPizza" class="control-label"></label>
+                <input asp-for="IdPizza" class="form-control" />
+                <span asp-validation-for="IdPizza" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOrder" class="control-label"></label>
+                <input asp-for="DateOrder" class="form-control" />
+                <span asp-validation-for="DateOrder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

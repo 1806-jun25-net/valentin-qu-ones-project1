@@ -1,0 +1,54 @@
+﻿@model PizzaApp2.Models.Orders
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Orders</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AmountPizza" class="control-label"></label>
+                <input asp-for="AmountPizza" class="form-control" />
+                <span asp-validation-for="AmountPizza" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User_idUser" class="control-label"></label>
+                <select asp-for="User_idUser" class="form-control" asp-items="@(new SelectList (ViewBag.UserList, "Id", "FirstName"))"></select>
+                <span asp-validation-for="User_idUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pizza_IdPizza" class="control-label"></label>
+                <select asp-for="Pizza_IdPizza" class="form-control" asp-items="@(new SelectList (ViewBag.PizzaList, "Id", "PizzaName"))"></select>
+                <span asp-validation-for="Pizza_IdPizza" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User_Location_IdLocation" class="control-label"></label>
+                <select asp-for="User_Location_IdLocation" class="form-control" asp-items="@(new SelectList (ViewBag.LocationList, "Id", "LocationName"))"></select>
+
+                <span asp-validation-for="User_Location_IdLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOrder" class="control-label"></label>
+                <input asp-for="DateOrder" class="form-control" />
+                <span asp-validation-for="DateOrder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

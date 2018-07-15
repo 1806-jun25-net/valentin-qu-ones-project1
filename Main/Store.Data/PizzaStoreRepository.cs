@@ -74,5 +74,76 @@ namespace Store.Data
 
         }
 
+        public void AddOrderHasPizza()
+        {
+            /*
+            var idForOrderHasPizza = GetOrders();
+
+            var id1 = _db.OrderHasPizza.FirstOrDefault(g => g.OrderIdOrder == iD);
+            if (id == null)
+            {
+                throw new ArgumentException("order not added", nameof(id));
+
+            }
+            var orderHasPizza = new OrderHasPizza
+            {
+                OrderIdOrder = idForOrderHasPizza.Last().IdOrder + 1,
+                OrderLocationIdLocation = location,
+                OrderUserIdUser = userID,
+                OrderUserLocationIdLocation = userLocation,
+                PizzaIdPizza = idPizza,
+                AmountOfPizzaInOrder = amountPizza
+
+
+
+
+
+            };
+
+
+
+
+            _db.Add(orderHasPizza);
+            */
+
+        }
+
+        public void AddOrder(int location,int userID, int userLocation, DateTime release, int idPizza, int amountPizza)
+        {
+
+            //LINQ first fails by thrrowing exception
+            //FirstOrDefault fails to just null
+            
+            var order = new Orders
+            {
+
+                LocationIdLocation = location,
+                UserIdUser = userID,
+                UserLocationIdLocation = userLocation,
+                DateOfOrders = release,
+                
+                
+                
+
+            };
+            _db.Add(order);
+
+            
+        }
+
+        public int getLastIndexOrder()
+        {
+            var idForOrderHasPizza = GetOrders();
+            var lastIndex = idForOrderHasPizza.Last().IdOrder;
+            return lastIndex;
+
+        }
+
+        public void Save()
+        {
+            _db.SaveChanges();
+        }
+
+
     }
 }

@@ -1,0 +1,42 @@
+﻿@model PizzaApp2.Models.OrderOfPizza
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>OrderOfPizza</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountPizza)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AmountPizza)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdUsers)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdUsers)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdPizza)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdPizza)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOrder)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateOrder)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

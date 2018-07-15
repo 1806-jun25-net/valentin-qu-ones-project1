@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Store.Data;
 
 namespace Main
 {
@@ -13,6 +14,8 @@ namespace Main
     {
         static void Main(string[] args)
         {
+
+            #region Database
 
             #region Database
 
@@ -28,11 +31,19 @@ namespace Main
 
             #endregion
 
+            var optionsBuilder = new DbContextOptionsBuilder<PizzaPalaceContext>();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPalace"));
+            var repo = new PizzaStoreRepository(new PizzaPalaceContext(optionsBuilder.Options));
+            
+
+            #endregion
+
 
             int option = 1;
             Methods m = new Methods();
-            
 
+
+            #region Menu
 
             while (option != 0)
             {
@@ -81,7 +92,10 @@ namespace Main
                                             string fName = Console.ReadLine();
                                             Console.WriteLine("Enter the Last Name: ");
                                             string lName = Console.ReadLine();
-                                            m.SearchUser(fName,lName);
+                                            m.SearchUser(fName, lName);
+                                            Console.WriteLine("What is the location of this user? ");
+                                            m.PrintLocations();
+                                            int locationUser = int.Parse(Console.ReadLine());
 
                                             Console.WriteLine("Enter the user ID you want to use the order with: ");
                                             int userID = int.Parse(Console.ReadLine());
@@ -90,27 +104,35 @@ namespace Main
                                             Console.WriteLine("What is the location ID of the store: ");
                                             int locationID = int.Parse(Console.ReadLine());
 
-                                            
+
                                             #endregion
 
                                             Console.WriteLine("How many " + m.piz[pizzaOption].NamePizza.ToString() + " Pizza do you want? ");
                                             pizzaQty = int.Parse(Console.ReadLine());
-                                            
-                                                if (int.TryParse(pizzaQty.ToString(), out i))
+
+                                            if (int.TryParse(pizzaQty.ToString(), out i))
+                                            {
+                                                if (pizzaQty <= int.Parse(m.piz[pizzaOption].CountPizza.ToString()))
                                                 {
-                                                    if (pizzaQty <= int.Parse(m.piz[pizzaOption].CountPizza.ToString()))
-                                                    {
-                                                       m.OrderPizza(userID, locationID, pizzaOption, pizzaQty);
+                                                    // m.OrderPizza(userID, locationID, pizzaOption, pizzaQty);
+
+
+
+
+
+                                                    repo.AddOrder(locationID,userID,locationUser,DateTime.Now, pizzaOption, pizzaQty);
+                                                    repo.Save();
+
 
                                                     }
-                                                    else
-                                                    {
-                                                        Console.WriteLine("We are low on stock at the moment. Please try again later. Thanks.");
-                                                    }
-
-
+                                                else
+                                                {
+                                                    Console.WriteLine("We are low on stock at the moment. Please try again later. Thanks.");
                                                 }
-                                            
+
+
+                                            }
+
                                         }
                                         catch (FormatException ex)
                                         {
@@ -162,8 +184,8 @@ namespace Main
                     if (option == 3)
                     {
                         Console.WriteLine("Enter a user ID to search the suggested pizza: ");
-                         m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
-                       // m.getCountOfList();
+                        m.PrintSuggestedOrder(int.Parse(Console.ReadLine()));
+                        // m.getCountOfList();
 
                     }
 
@@ -224,9 +246,20 @@ namespace Main
                     Console.WriteLine(ex);
 
                 }
+                catch (Exception ex)
+                {
+
+                    Logger logger = LogManager.GetCurrentClassLogger();
+                    logger.ErrorException("Format Error", ex);
+                    Console.WriteLine($"Unexpected error: {ex.Message}");
+
+                }
+
+
+
             }
 
-
+            #endregion
 
         }
 

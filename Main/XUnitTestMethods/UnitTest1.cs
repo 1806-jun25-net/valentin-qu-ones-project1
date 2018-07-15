@@ -1,4 +1,5 @@
 using Main;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pizza.Library;
 using Pizza.Library.Pizza;
@@ -419,6 +420,76 @@ namespace XUnitTestMethods
 
         }
 
+        private readonly PizzaPalaceContext _db;
+
+        [Fact]
+        public IEnumerable<Store.Data.Pizza> GetPizzas()
+        {
+             
+        //we dont need to track changes to these
+        //so skip the overhead of doing so
+        var pizza = _db.Pizza.AsNoTracking().ToList();
+            return pizza;
+
+        }
+
+
+        [Theory]
+        [InlineData(1,2,3,4,2,2)]
+        public void AddOrder(int location, int userID, int userLocation,  int iD, int idPizza, int amountPizza)
+        {
+
+            //LINQ first fails by thrrowing exception
+            //FirstOrDefault fails to just null
+            var id = _db.Orders.FirstOrDefault(g => g.IdOrder == iD);
+            if (id == null)
+            {
+                throw new ArgumentException("order not added", nameof(id));
+
+            }
+            var order = new Store.Data.Orders
+            {
+
+                LocationIdLocation = location,
+                UserIdUser = userID,
+                UserLocationIdLocation = userLocation,
+                
+
+
+
+
+            };
+            _db.Add(order);
+
+            
+
+            var id1 = _db.OrderHasPizza.FirstOrDefault(g => g.OrderIdOrder == iD);
+            if (id == null)
+            {
+                throw new ArgumentException("order not added", nameof(id));
+
+            }
+            var orderHasPizza = new OrderHasPizza
+            {
+                OrderIdOrder = 4,
+                OrderLocationIdLocation = location,
+                OrderUserIdUser = userID,
+                OrderUserLocationIdLocation = userLocation,
+                PizzaIdPizza = idPizza,
+                AmountOfPizzaInOrder = amountPizza
+
+
+
+
+
+            };
+
+
+
+
+            _db.Add(orderHasPizza);
+
+        }
 
 
     }
