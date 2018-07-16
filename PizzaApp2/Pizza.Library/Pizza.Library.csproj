@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PizzaApp2\PizzaApp2.csproj" />
+  </ItemGroup>
+
 </Project>

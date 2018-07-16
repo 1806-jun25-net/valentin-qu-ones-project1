@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using NLog;
 using PizzaApp2.Models;
 
 namespace PizzaApp2.Controllers
@@ -30,55 +32,80 @@ namespace PizzaApp2.Controllers
         public IActionResult Index(string sortOrder)
         {
 
+            try
+            {
+                ViewBag.Quantity = String.IsNullOrEmpty(sortOrder) ? "Quantity" : "";
+                ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+                var ord = from s in _context.Orders
+                          select s;
+                switch (sortOrder)
+                {
 
-            ViewBag.Quantity = String.IsNullOrEmpty(sortOrder) ? "Quantity" : "";
-            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
-            var ord = from s in _context.Orders
-                      select s;
-            switch (sortOrder)
+                    case "Date":
+                        ord = ord.OrderBy(s => s.DateOrder);
+                        break;
+                    case "Quantity":
+                        ord = ord.OrderBy(s => s.AmountPizza);
+                        break;
+
+                }
+
+                return View(ord);
+            }
+            catch (Exception ex)
             {
 
-                case "Date":
-                    ord = ord.OrderBy(s => s.DateOrder);
-                    break;
-                case "Quantity":
-                    ord = ord.OrderBy(s => s.AmountPizza);
-                    break;
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return View();
 
             }
-
-            return View(ord);
         }
 
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var orders = await _context.Orders
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                ViewData["Location Name"] = (from location1 in _context.Locations where location1.Id == orders.User_Location_IdLocation select location1.LocationName).ToList().FirstOrDefault();
+                ViewData["User Name"] = (from user in _context.UserInfo where user.Id == orders.User_idUser select user.FirstName).ToList().FirstOrDefault();
+                ViewData["Pizza Name"] = (from piz in _context.Pizza where piz.Id == orders.Pizza_IdPizza select piz.PizzaName).ToList().FirstOrDefault();
+
+                ViewData["Pizza Price"] = (from piz in _context.Pizza where piz.Id == orders.Pizza_IdPizza select piz.PizzaPrice).ToList().FirstOrDefault();
+
+                var pPrice = decimal.Parse(((from piz in _context.Pizza where piz.Id == orders.Pizza_IdPizza select piz.PizzaPrice).ToList().FirstOrDefault()).ToString());
+
+                var price = int.Parse(orders.AmountPizza.ToString()) * pPrice;
+
+                ViewData["Order Price"] = price.ToString();
+
+
+                if (orders == null)
+                {
+                    return NotFound();
+                }
+
+                return View(orders);
+
+
             }
-
-            var orders = await _context.Orders
-                .FirstOrDefaultAsync(m => m.Id == id);
-            ViewData["Location Name"] = (from location1 in _context.Locations where location1.Id == orders.User_Location_IdLocation select location1.LocationName).ToList().FirstOrDefault();
-            ViewData["User Name"] = (from user in _context.UserInfo where user.Id == orders.User_idUser select user.FirstName).ToList().FirstOrDefault();
-            ViewData["Pizza Name"] = (from piz in _context.Pizza where piz.Id == orders.Pizza_IdPizza select piz.PizzaName).ToList().FirstOrDefault();
-
-            ViewData["Pizza Price"] = (from piz in _context.Pizza where piz.Id == orders.Pizza_IdPizza select piz.PizzaPrice).ToList().FirstOrDefault();
-
-            var pPrice = decimal.Parse(((from piz in _context.Pizza where piz.Id == orders.Pizza_IdPizza select piz.PizzaPrice).ToList().FirstOrDefault()).ToString());
-
-            var price = int.Parse(orders.AmountPizza.ToString()) * pPrice;
-
-            ViewData["Order Price"] = price.ToString();
-
-
-            if (orders == null)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
 
-            return View(orders);
+                Logger logger = LogManager.GetCurrentClassLogger();
+                logger.ErrorException("Format Error", ex);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return View();
+
+            }
         }
 
         
